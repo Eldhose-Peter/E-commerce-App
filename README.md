@@ -1,6 +1,15 @@
 # E-commerce-App
 A NodeJS App with Microservice Architecture which provides services like order, carts, catalog, user management and a service registry
 
+## Architecture
+
+- Shopper - is the Backend for frontend service which connects to all other services using the service registry
+- Registry service - is the service to which all other services register to. It maintians a catalog of the avaliable services and its corresponding location. It also removes inactive services by veryfying the heartbeat interval. Service registry has a constant port:3080
+- User Service - responsible for the user authentication and manageing the JWT tokens
+- Catalog Service - create/edit/delete items from the catalog stored in MongoDB
+- Cart Service - add/remove items from cart using Redis. And allows to submit request for Orders
+- Orders Service - the order request are published in RabbitMQ by the cart service. The Order service subscribes to this Queue and process pending orders present in the Queue.
+
 ## Setup env
 
 ### Start MongoDB in Docker
@@ -27,3 +36,13 @@ UI: http://localhost:16686
 `docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 -d rabbitmq:3.11-management`
 
 Management interface: http://localhost:15672/ user: guest, password: guest
+
+## Running the services
+Install dependencies and start all services
+`npm install && npm run start`
+- registry-service
+- shopper
+- cart-service
+- catalog-service
+- order-service
+- user-service
